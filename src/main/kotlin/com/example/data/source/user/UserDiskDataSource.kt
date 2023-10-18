@@ -20,6 +20,7 @@ interface UserDiskDataSource {
     suspend fun getUserInfo(id:String):UserEntity?
     suspend fun addFavoriteCoffee(userId:String, coffeeId:String)
     suspend fun deleteFavoriteCoffee(userId:String, coffeeId:String)
+    suspend fun editUser(userEntity: UserEntity)
 
     companion object{
 

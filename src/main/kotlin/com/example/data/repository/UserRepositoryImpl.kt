@@ -33,4 +33,8 @@ class UserRepositoryImpl(
     override suspend fun deleteFavoriteCoffee(userId: String, coffeeId: String) {
         userDiskDataSource.deleteFavoriteCoffee(userId = userId, coffeeId = coffeeId)
     }
+
+    override suspend fun editUser(userEntity: UserEntity) {
+        userDiskDataSource.editUser(userEntity)
+    }
 }

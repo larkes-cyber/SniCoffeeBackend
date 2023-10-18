@@ -2,6 +2,7 @@ package com.example.domain.mapper
 
 import com.example.data.model.UserEntity
 import com.example.domain.model.User
+import com.example.routes.models.UserDto
 
 fun User.toUserEntity():UserEntity{
 
@@ -19,6 +20,18 @@ fun User.toUserEntity():UserEntity{
 }
 
 fun UserEntity.toUser():User{
+    return User(
+        id = id,
+        name = name,
+        photoSrc = photoSrc,
+        number = number,
+        login = login,
+        password = password,
+        favoriteCoffee = if(favoriteCoffee.isNotEmpty()) favoriteCoffee.split(";") else emptyList()
+    )
+}
+
+fun UserDto.toUser():User{
     return User(
         id = id,
         name = name,

@@ -1,7 +1,5 @@
-package com.example.domain.usecase.coffee_kind
+package com.example.domain.usecase.coffee_category
 
-import com.example.domain.mapper.toCoffee
-import com.example.domain.model.Coffee
 import com.example.domain.repository.CoffeeCategoryRepository
 import com.example.utils.Resource
 

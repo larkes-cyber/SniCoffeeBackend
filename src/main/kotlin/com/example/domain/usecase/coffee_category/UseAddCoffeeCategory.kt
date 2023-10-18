@@ -1,11 +1,11 @@
-package com.example.domain.usecase.coffee_kind
+package com.example.domain.usecase.coffee_category
 
 import com.example.domain.mapper.toCoffeeKindEntity
 import com.example.domain.model.CoffeeCategory
 import com.example.domain.repository.CoffeeCategoryRepository
 import com.example.utils.Resource
 
-class UseEditCoffeeCategory(
+class UseAddCoffeeCategory(
     private val coffeeCategoryRepository: CoffeeCategoryRepository
 ) {
 
