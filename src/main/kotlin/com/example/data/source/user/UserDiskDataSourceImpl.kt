@@ -76,4 +76,10 @@ class UserDiskDataSourceImpl(
             userDb.insertOne(user)
         }
     }
+
+    override suspend fun findUserByLogin(login: String): UserEntity? {
+        val filter = Filters.eq("login", login)
+        val user = userDb.findOne(filter)
+        return user
+    }
 }

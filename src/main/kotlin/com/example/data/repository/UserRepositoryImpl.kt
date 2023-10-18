@@ -37,4 +37,8 @@ class UserRepositoryImpl(
     override suspend fun editUser(userEntity: UserEntity) {
         userDiskDataSource.editUser(userEntity)
     }
+
+    override suspend fun findUserByLogin(login: String): UserEntity? {
+        return userDiskDataSource.findUserByLogin(login)
+    }
 }

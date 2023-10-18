@@ -32,5 +32,12 @@ val userDomainModule = module {
     factory<UseRegisterUser> {
         UseRegisterUser(get())
     }
+    factory<UseCheckUserExists> {
+        UseCheckUserExists(get())
+    }
+
+    factory<UseCheckCorrectSession> {
+        UseCheckCorrectSession(get())
+    }
 
 }
