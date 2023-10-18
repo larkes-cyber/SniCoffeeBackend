@@ -3,7 +3,7 @@ package com.example.domain.model
 import java.util.*
 
 data class Coffee(
-    val id:String =  UUID.randomUUID().toString(),
+    val id:String? = null,
     val photoSrc:String? = null,
     val includeBeans:Boolean = false,
     val includeMilk:Boolean = false,

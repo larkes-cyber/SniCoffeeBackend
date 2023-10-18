@@ -1,14 +1,13 @@
-package com.example.domain.repository
+package com.example.data.source.coffee
 
 import com.example.data.model.CoffeeEntity
-import java.io.File
 
-interface CoffeeRepository {
+interface CoffeeDiskDataSource {
 
     suspend fun insertCoffee(coffeeEntity: CoffeeEntity)
-    suspend fun changeCoffeePhoto(id:String, image:File)
     suspend fun deleteCoffee(id:String)
     suspend fun getCoffeeByCategory(id:String):List<CoffeeEntity>
     suspend fun findCoffeeBySymbols(symbols:String):List<CoffeeEntity>
+
 
 }

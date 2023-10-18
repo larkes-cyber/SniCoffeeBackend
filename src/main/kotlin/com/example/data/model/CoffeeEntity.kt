@@ -3,7 +3,7 @@ package com.example.data.model
 import java.util.*
 
 data class CoffeeEntity(
-    val id:String,
+    var id:String?,
     val photoSrc:String?,
     val includeBeans:Boolean,
     val includeMilk:Boolean,

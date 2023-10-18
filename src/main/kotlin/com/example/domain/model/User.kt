@@ -6,8 +6,8 @@ data class User(
     val id:String? = null,
     val name:String,
     val photoSrc:String? = null,
-    val number:String,
+    val number:String? = null,
     val login:String,
-    val passwordHash:String,
-    val favoriteCoffee:List<String>
+    val password:String,
+    val favoriteCoffee:List<String> = listOf()
 )

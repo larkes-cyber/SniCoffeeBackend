@@ -5,7 +5,7 @@ import com.example.domain.model.User
 
 fun User.toUserEntity():UserEntity{
 
-    val favoriteCoffeeStr = favoriteCoffee.joinToString(";")
+    val favoriteCoffeeStr =if(favoriteCoffee.isNotEmpty()) favoriteCoffee.joinToString(";") else ""
 
     return UserEntity(
         id = id,
@@ -13,7 +13,7 @@ fun User.toUserEntity():UserEntity{
         photoSrc = photoSrc,
         number = number,
         login = login,
-        passwordHash = passwordHash,
+        password = password,
         favoriteCoffee = favoriteCoffeeStr
     )
 }
@@ -25,7 +25,7 @@ fun UserEntity.toUser():User{
         photoSrc = photoSrc,
         number = number,
         login = login,
-        passwordHash = passwordHash,
-        favoriteCoffee = favoriteCoffee.split(";")
+        password = password,
+        favoriteCoffee = if(favoriteCoffee.isNotEmpty()) favoriteCoffee.split(";") else emptyList()
     )
 }

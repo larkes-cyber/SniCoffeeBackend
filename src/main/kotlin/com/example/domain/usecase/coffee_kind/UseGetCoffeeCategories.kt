@@ -1,20 +1,19 @@
 package com.example.domain.usecase.coffee_kind
 
-import com.example.domain.mapper.toCoffee
-import com.example.domain.mapper.toCoffeeKindEntity
-import com.example.domain.model.Coffee
+import com.example.domain.mapper.toCoffeeKind
 import com.example.domain.model.CoffeeCategory
 import com.example.domain.repository.CoffeeCategoryRepository
+import com.example.domain.repository.CoffeeRepository
 import com.example.utils.Resource
 
-class UseAddCoffeeCategory(
+class UseGetCoffeeCategories(
     private val coffeeCategoryRepository: CoffeeCategoryRepository
 ) {
 
-    suspend fun execute(coffeeCategory: CoffeeCategory): Resource<String> {
+    suspend fun execute(): Resource<List<CoffeeCategory>> {
         return try {
-            coffeeCategoryRepository.insertCoffeeCategory(coffeeCategory.toCoffeeKindEntity())
-            Resource.Success("success")
+           val categories = coffeeCategoryRepository.getCoffeeCategories().map { it.toCoffeeKind() }
+            Resource.Success(categories)
         }catch (e:Exception){
             Resource.Error(e.message!!)
         }
