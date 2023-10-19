@@ -8,7 +8,7 @@ class UseChangeUserPhoto(
     private val userRepository: UserRepository
 ) {
 
-    suspend fun execute(userId:String, photo:File): Resource<String> {
+    suspend fun execute(userId:String, photo:ByteArray): Resource<String> {
         return try {
             userRepository.changeUserPhoto(id = userId, photo = photo)
             Resource.Success("success")

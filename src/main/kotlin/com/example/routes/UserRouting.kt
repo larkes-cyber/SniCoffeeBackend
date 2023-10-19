@@ -3,7 +3,15 @@ package com.example.routes
 import com.example.domain.mapper.toUser
 import com.example.domain.model.User
 import com.example.domain.usecase.user.*
+import com.example.routes.models.FavoriteCoffeeDto
+import com.example.routes.models.LoginDto
+import com.example.routes.models.SessionDto
 import com.example.routes.models.UserDto
+import com.example.routes.navigation.UserBranch
+import com.example.utils.Constants.INCORRECT_DATA_MESSAGE
+import com.example.utils.Constants.INVALID_SESSION_MESSAGE
+import com.example.utils.Constants.SHORT_PASSWORD_MESSAGE
+import com.example.utils.Constants.SUCCESS_MESSAGE
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -12,6 +20,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import java.io.File
+import kotlin.math.log
 
 fun Routing.userRouting() {
 
@@ -26,27 +35,91 @@ fun Routing.userRouting() {
     val useCheckUserExists by inject<UseCheckUserExists>()
 
     route("/user"){
-        post("/register"){
+        post(UserBranch.RegisterBranch.route){
+            val emailPattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
             val user = call.receive<UserDto>()
-            val res = useRegisterUser.execute(user.toUser())
-            call.respondText(res.data!!.id!!)
-        }
-        post("/upload_image") {
-            val session = call.parameters["session"] ?: return@post call.respondText("", status = HttpStatusCode.BadRequest)
-            val login = call.parameters["login"] ?: return@post call.respondText("", status = HttpStatusCode.BadRequest)
-            val multipartData = call.receiveMultipart()
 
-            multipartData.forEachPart {part ->
-                when(part){
-                    is PartData.FormItem -> {}
-                    is PartData.FileItem -> {
-                        val fileBytes = part.streamProvider().readBytes()
-                        val file = File("$login.jpg").writeBytes(fileBytes)
-                    }
-                    else -> {}
-                }
-                part.dispose()
+            if(useCheckUserExists.execute(user.login)){
+                call.respondText(INCORRECT_DATA_MESSAGE, status =  HttpStatusCode.Unauthorized)
+                return@post
             }
+            if(!emailPattern.matches(user.login)){
+                call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            if(user.password.length < 8){
+                call.respondText(SHORT_PASSWORD_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+
+            val res = useRegisterUser.execute(user.toUser())
+            call.respondText(res.data!!.id!!, status = HttpStatusCode.Accepted)
         }
+        post(UserBranch.AuthBranch.route) {
+            val login = call.receive<LoginDto>()
+            val user = useAuthUser.execute(login = login.login, password = login.password)
+            if(user.data == null){
+                call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            call.respond(user)
+        }
+        post(UserBranch.EditProfileBranch.route) {
+            val user = call.receive<UserDto>()
+            if(user.id == null || useCheckCorrectSession.execute(user.id)){
+                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            useEditUserInfo.execute(user.toUser())
+            call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
+        }
+
+        post(UserBranch.AddFavoriteCoffee.route) {
+            val coffee = call.receive<FavoriteCoffeeDto>()
+            if(useCheckCorrectSession.execute(coffee.session)){
+                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            useAddFavoriteCoffee.execute(userId = coffee.session, coffeeId = coffee.coffeeId)
+            call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
+        }
+
+        post(UserBranch.RemoveFavoriteCoffee.route) {
+            val coffee = call.receive<FavoriteCoffeeDto>()
+            if(useCheckCorrectSession.execute(coffee.session)){
+                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            useDeleteFavoriteCoffee.execute(userId = coffee.session, coffeeId = coffee.coffeeId)
+            call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
+        }
+
+        post(UserBranch.GetUserInfo.route) {
+            val session = call.receive<SessionDto>()
+            if(useCheckCorrectSession.execute(session.session)){
+                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            val user = useGetUserInfo.execute(session.session)
+            call.respond(user)
+        }
+        post(UserBranch.ChangeProfilePhotoBranch.route) {
+            val multipartData = call.receiveMultipart()
+            val session = call.parameters["session"] ?: return@post call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
+            val login = call.parameters["login"] ?: return@post call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.BadRequest)
+            if(useCheckCorrectSession.execute(session)){
+                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            multipartData.forEachPart {part ->
+                if(part is PartData.FileItem){
+                    val fileBytes = part.streamProvider().readBytes()
+                    useChangeUserPhoto.execute(userId = login, photo = fileBytes)
+                    part.dispose()
+                }
+            }
+            call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
+        }
+
     }
 }

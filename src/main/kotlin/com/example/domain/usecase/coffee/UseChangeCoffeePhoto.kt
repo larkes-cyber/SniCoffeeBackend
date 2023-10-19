@@ -10,7 +10,7 @@ class UseChangeCoffeePhoto(
     private val coffeeRepository: CoffeeRepository
 ) {
 
-    suspend fun execute(id:String, file:File): Resource<String> {
+    suspend fun execute(id:String, file:ByteArray): Resource<String> {
         return try {
             coffeeRepository.changeCoffeePhoto(id, file)
             Resource.Success("success")

@@ -8,7 +8,7 @@ interface UserRepository {
 
     suspend fun registerUser(userEntity: UserEntity):UserEntity
     suspend fun authUser(login:String, password:String):UserEntity?
-    suspend fun changeUserPhoto(id:String, photo:File)
+    suspend fun changeUserPhoto(id:String, photo:ByteArray)
     suspend fun getUserInfo(id:String):UserEntity?
     suspend fun addFavoriteCoffee(userId:String, coffeeId:String)
     suspend fun deleteFavoriteCoffee(userId:String, coffeeId:String)

@@ -15,7 +15,7 @@ class CoffeeRepositoryImpl(
         coffeeDiskDataSource.insertCoffee(coffeeEntity)
     }
 
-    override suspend fun changeCoffeePhoto(id: String, image: File) {
+    override suspend fun changeCoffeePhoto(id: String, image: ByteArray) {
         coffeeImageStorageDataSource.uploadPhoto(id = id, file = image)
     }
 

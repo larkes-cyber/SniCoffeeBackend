@@ -18,7 +18,7 @@ class UserRepositoryImpl(
        return userDiskDataSource.authUser(login = login, password = password)
     }
 
-    override suspend fun changeUserPhoto(id: String, photo: File) {
+    override suspend fun changeUserPhoto(id: String, photo: ByteArray) {
         userImageStorageDataSource.uploadPhoto(id = id, file = photo)
     }
 
