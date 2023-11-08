@@ -42,3 +42,15 @@ fun UserDto.toUser():User{
         favoriteCoffee = if(favoriteCoffee.isNotEmpty()) favoriteCoffee.split(";") else emptyList()
     )
 }
+
+fun User.toUserDto():UserDto{
+    return UserDto(
+        id = id,
+        name = name,
+        photoSrc = photoSrc,
+        number = number,
+        login = login,
+        password = password,
+        favoriteCoffee = if(favoriteCoffee.isNotEmpty()) favoriteCoffee.joinToString(";") else ""
+    )
+}

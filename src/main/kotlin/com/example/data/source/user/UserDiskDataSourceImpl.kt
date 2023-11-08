@@ -18,7 +18,6 @@ class UserDiskDataSourceImpl(
 
 
     override suspend fun registerUser(userEntity: UserEntity): UserEntity {
-
         val passHash = UserDiskDataSource.generatePasswordHash(userEntity.password)
         val token = UserDiskDataSource.generateToken(password = passHash, login = userEntity.login)
 
@@ -30,23 +29,30 @@ class UserDiskDataSourceImpl(
     }
 
     override suspend fun authUser(login: String, password: String): UserEntity? {
-
         val passHash = UserDiskDataSource.generatePasswordHash(password)
         val token = UserDiskDataSource.generateToken(password = passHash, login = login)
-
-        val filter = Filters.eq("_id", token)
-
+        println("werfgfdedf $login  $password")
+        val filter = Filters.eq("id", token)
+        val users = userDb.findOne(filter)
+        println("erghgfdw###################################erfg ${users!!.name}")
         return userDb.findOne(filter)
     }
 
     override suspend fun getUserInfo(id: String): UserEntity? {
-        val filter = Filters.eq("_id", id)
+        println("wefgh################gfef $id")
+
+        val users = userDb.find()
+        println("werfgfdfgdfeeeeeeee ${users.toList()[0].id} ${users.toList()[0].login}")
+
+        val filter = Filters.eq("id", id)
+        val us = userDb.findOne(filter)
+        println("werfgfdfgdfeeeeeeee ${us}")
         return userDb.findOne(filter)
     }
 
     override suspend fun addFavoriteCoffee(userId: String, coffeeId: String) {
 
-        val filter = Filters.eq("_id", userId)
+        val filter = Filters.eq("id", userId)
         val user = userDb.findOne(filter)
 
         if(user != null){
@@ -58,7 +64,7 @@ class UserDiskDataSourceImpl(
     }
 
     override suspend fun deleteFavoriteCoffee(userId: String, coffeeId: String) {
-        val filter = Filters.eq("_id", userId)
+        val filter = Filters.eq("id", userId)
         val user = userDb.findOne(filter)
         if(user != null){
             val favoriteCoffee = (if(user.favoriteCoffee.isNotEmpty()) user.favoriteCoffee.split(";") else listOf()).toMutableList()
@@ -69,11 +75,13 @@ class UserDiskDataSourceImpl(
      }
 
     override suspend fun editUser(userEntity: UserEntity) {
-        val filter = Filters.eq("_id", userEntity.id)
+        val filter = Filters.eq("id", userEntity.id)
         val user = userDb.findOne(filter)
 
         if(user != null){
-            userDb.insertOne(user)
+            userEntity.password = user.password
+            userDb.deleteOne(filter)
+            userDb.insertOne(userEntity)
         }
     }
 

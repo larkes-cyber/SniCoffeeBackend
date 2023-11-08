@@ -51,3 +51,20 @@ fun CoffeeDto.toCoffee():Coffee{
         price = price
     )
 }
+
+fun Coffee.toCoffeeDto():CoffeeDto{
+    return CoffeeDto(
+        id = id,
+        photoSrc = photoSrc,
+        includeBeans = includeBeans,
+        includeMilk = includeMilk,
+        categoryId = categoryId,
+        categoryTitle = categoryTitle,
+        subtitle = subtitle,
+        description = description,
+        totalScore = totalScore,
+        scoreCount = scoreCount,
+        price = price,
+        session = ""
+    )
+}

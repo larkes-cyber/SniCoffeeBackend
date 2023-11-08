@@ -2,6 +2,7 @@ package com.example.routes
 
 import com.example.domain.mapper.toCoffeeCategory
 import com.example.domain.mapper.toOrder
+import com.example.domain.mapper.toOrderDto
 import com.example.domain.usecase.order.UseAddOrder
 import com.example.domain.usecase.order.UseCompleteOrder
 import com.example.domain.usecase.order.UseGetOrders
@@ -31,7 +32,7 @@ fun Routing.orderRouting() {
     route("order"){
         post(OrderBranch.AddOrderBranch.route) {
             val order = call.receive<OrderDto>()
-            if(useCheckCorrectSession.execute(order.session)){
+            if(useCheckCorrectSession.execute(order.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -40,7 +41,7 @@ fun Routing.orderRouting() {
         }
         post(OrderBranch.DeleteOrderBranch.route) {
             val order = call.receive<OrderDto>()
-            if(useCheckCorrectSession.execute(order.session)){
+            if(useCheckCorrectSession.execute(order.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -49,7 +50,7 @@ fun Routing.orderRouting() {
         }
         post(OrderBranch.CompleteOrderBranch.route) {
             val order = call.receive<OrderDto>()
-            if(useCheckCorrectSession.execute(order.session)){
+            if(useCheckCorrectSession.execute(order.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -58,12 +59,12 @@ fun Routing.orderRouting() {
         }
         post(OrderBranch.GetOrdersBranch.route) {
             val order = call.receive<SessionDto>()
-            if(useCheckCorrectSession.execute(order.session)){
+            if(useCheckCorrectSession.execute(order.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
             val orders = useGetOrders.execute().data
-            call.respond(OrderList(orders!!))
+            call.respond(OrderList(orders!!.map { it.toOrderDto() }))
         }
 
 

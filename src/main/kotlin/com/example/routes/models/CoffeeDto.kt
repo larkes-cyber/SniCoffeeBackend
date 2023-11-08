@@ -2,7 +2,7 @@ package com.example.routes.models
 
 import kotlinx.serialization.Serializable
 
-@Serializable
+@Serializable()
 data class CoffeeDto(
     val session:String,
     val id:String? = null,

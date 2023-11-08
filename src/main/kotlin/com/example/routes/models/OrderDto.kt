@@ -1,5 +1,8 @@
 package com.example.routes.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OrderDto(
     val session:String,
     val id:String? = null,

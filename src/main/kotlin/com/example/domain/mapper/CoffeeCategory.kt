@@ -24,3 +24,11 @@ fun CategoryDto.toCoffeeCategory():CoffeeCategory{
         title = title
     )
 }
+
+fun CoffeeCategory.toCategoryDto():CategoryDto{
+    return CategoryDto(
+        id = id,
+        title = title,
+        session = ""
+    )
+}

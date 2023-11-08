@@ -9,6 +9,7 @@ class UseCheckCorrectSession(
 
     suspend fun execute(id:String):Boolean{
         val user = userRepository.getUserInfo(id)
+        println("werfgferfge $user")
         return if(user == null) Constants.USER_DOESNT_EXIST else Constants.USER_EXISTS
     }
 

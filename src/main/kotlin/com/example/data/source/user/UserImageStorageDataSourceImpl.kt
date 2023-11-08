@@ -5,8 +5,8 @@ import java.io.File
 class UserImageStorageDataSourceImpl:UserImageStorageDataSource {
     override suspend fun uploadPhoto(id: String, file: ByteArray): String {
         val name = "$id.jpg"
-        val file = File("user_images/$name").writeBytes(file)
+        File("user_images/$name").writeBytes(file)
 
-        return ""
+        return "user_images/$name"
     }
 }

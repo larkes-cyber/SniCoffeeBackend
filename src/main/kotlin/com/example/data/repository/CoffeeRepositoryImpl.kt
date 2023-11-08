@@ -30,4 +30,8 @@ class CoffeeRepositoryImpl(
     override suspend fun findCoffeeBySymbols(symbols: String): List<CoffeeEntity> {
         return coffeeDiskDataSource.findCoffeeBySymbols(symbols)
     }
+
+    override suspend fun getAllCoffee(): List<CoffeeEntity> {
+        return coffeeDiskDataSource.getAllCoffee()
+    }
 }

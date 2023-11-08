@@ -23,7 +23,7 @@ class CoffeeCategoryDiskDataSourceImpl(
     }
 
     override suspend fun deleteCoffeeCategory(id: String) {
-        val filter = Filters.eq("_id", id)
+        val filter = Filters.eq("id", id)
         coffeeCategoryDb.deleteOne(filter)
     }
 }

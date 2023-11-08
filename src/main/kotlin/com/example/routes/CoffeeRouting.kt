@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.domain.mapper.toCoffee
+import com.example.domain.mapper.toCoffeeDto
 import com.example.domain.usecase.coffee.*
 import com.example.domain.usecase.user.UseCheckCorrectSession
 import com.example.routes.models.CoffeeDto
@@ -26,14 +27,14 @@ fun Routing.coffeeRouting(){
     val useFindCoffee by inject<UseFindCoffee>()
     val useGetCoffeeByCategory by inject<UseGetCoffeeByCategory>()
     val useCheckCorrectSession by inject<UseCheckCorrectSession>()
-
+    val useGetAllCoffee by inject<UseGetAllCoffee>()
 
 
     route("/coffee"){
 
         post(CoffeeBranch.AddCoffeeBranch.route) {
             val coffee = call.receive<CoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -43,7 +44,7 @@ fun Routing.coffeeRouting(){
 
         post(CoffeeBranch.DeleteCoffeeBranch.route) {
             val coffee = call.receive<CoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -53,7 +54,7 @@ fun Routing.coffeeRouting(){
 
         post(CoffeeBranch.EditCoffeeBranch.route) {
             val coffee = call.receive<CoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -65,7 +66,7 @@ fun Routing.coffeeRouting(){
             val multipartData = call.receiveMultipart()
             val session = call.parameters["session"] ?: return@post call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
             val coffee_id = call.parameters["coffee_id"] ?: return@post call.respondText(Constants.INCORRECT_DATA_MESSAGE, status = HttpStatusCode.BadRequest)
-            if(useCheckCorrectSession.execute(session)){
+            if(useCheckCorrectSession.execute(session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -81,22 +82,32 @@ fun Routing.coffeeRouting(){
 
         post(CoffeeBranch.GetCoffeeByCategoryBranch.route) {
             val coffee = call.receive<SelectCategoryDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
             val coffeeList = useGetCoffeeByCategory.execute(categoryId = coffee.category).data
-            call.respond(CoffeeListDto(coffeeList!!))
+            call.respond(CoffeeListDto(coffeeList!!.map { it.toCoffeeDto() }))
         }
 
         post(CoffeeBranch.SearchForCoffeeBranch.route) {
             val coffee = call.receive<SearchForCoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
             val coffeeList = useFindCoffee.execute(symbols = coffee.symbols).data
-            call.respond(CoffeeListDto(coffeeList!!))
+            call.respond(CoffeeListDto(coffeeList!!.map { it.toCoffeeDto() }))
+        }
+
+        post(CoffeeBranch.GetAllCoffee.route) {
+            val session = call.parameters["session"] ?: return@post call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
+            if(useCheckCorrectSession.execute(session) == Constants.USER_DOESNT_EXIST){
+                call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            val coffee = useGetAllCoffee.execute().data
+            call.respond(coffee!!.map { it.toCoffeeDto() })
         }
 
     }

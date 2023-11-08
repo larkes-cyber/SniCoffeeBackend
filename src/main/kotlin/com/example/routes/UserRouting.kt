@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.domain.mapper.toUser
+import com.example.domain.mapper.toUserDto
 import com.example.domain.model.User
 import com.example.domain.usecase.user.*
 import com.example.routes.models.FavoriteCoffeeDto
@@ -12,6 +13,8 @@ import com.example.utils.Constants.INCORRECT_DATA_MESSAGE
 import com.example.utils.Constants.INVALID_SESSION_MESSAGE
 import com.example.utils.Constants.SHORT_PASSWORD_MESSAGE
 import com.example.utils.Constants.SUCCESS_MESSAGE
+import com.example.utils.Constants.USER_DOESNT_EXIST
+import com.example.utils.Constants.USER_EXISTS
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -62,11 +65,11 @@ fun Routing.userRouting() {
                 call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
-            call.respond(user)
+            call.respond(user.data.toUserDto() )
         }
         post(UserBranch.EditProfileBranch.route) {
             val user = call.receive<UserDto>()
-            if(user.id == null || useCheckCorrectSession.execute(user.id)){
+            if(user.id == null || useCheckCorrectSession.execute(user.id) == USER_DOESNT_EXIST){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -96,18 +99,18 @@ fun Routing.userRouting() {
 
         post(UserBranch.GetUserInfo.route) {
             val session = call.receive<SessionDto>()
-            if(useCheckCorrectSession.execute(session.session)){
+            if(useCheckCorrectSession.execute(session.session) == USER_DOESNT_EXIST){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
             val user = useGetUserInfo.execute(session.session)
-            call.respond(user)
+            call.respond(user.data!!.toUserDto())
         }
         post(UserBranch.ChangeProfilePhotoBranch.route) {
             val multipartData = call.receiveMultipart()
             val session = call.parameters["session"] ?: return@post call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
             val login = call.parameters["login"] ?: return@post call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.BadRequest)
-            if(useCheckCorrectSession.execute(session)){
+            if(useCheckCorrectSession.execute(session) == USER_DOESNT_EXIST){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }

@@ -39,3 +39,14 @@ fun OrderDto.toOrder():Order{
         productIds = productIds
     )
 }
+
+fun Order.toOrderDto():OrderDto{
+    return OrderDto(
+        id = id,
+        status = status,
+        userId = userId,
+        orderPrice = orderPrice,
+        productIds = productIds,
+        session = ""
+    )
+}

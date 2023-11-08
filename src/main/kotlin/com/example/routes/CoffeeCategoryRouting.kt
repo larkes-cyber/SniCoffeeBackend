@@ -1,5 +1,6 @@
 package com.example.routes
 
+import com.example.domain.mapper.toCategoryDto
 import com.example.domain.mapper.toCoffee
 import com.example.domain.mapper.toCoffeeCategory
 import com.example.domain.usecase.coffee_category.UseAddCoffeeCategory
@@ -31,7 +32,7 @@ fun Routing.coffeeCategoryRouting() {
     route("coffee_category"){
         post(CoffeeCategoryBranch.AddCoffeeCategory.route) {
             val coffee = call.receive<CategoryDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -40,7 +41,7 @@ fun Routing.coffeeCategoryRouting() {
         }
         post(CoffeeCategoryBranch.DeleteCoffeeCategory.route) {
             val coffee = call.receive<CategoryDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -49,7 +50,7 @@ fun Routing.coffeeCategoryRouting() {
         }
         post(CoffeeCategoryBranch.EditCoffeeCategory.route) {
             val coffee = call.receive<CategoryDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
@@ -58,12 +59,12 @@ fun Routing.coffeeCategoryRouting() {
         }
         post(CoffeeCategoryBranch.GetCoffeeCategories.route) {
             val session = call.receive<SessionDto>()
-            if(useCheckCorrectSession.execute(session.session)){
+            if(useCheckCorrectSession.execute(session.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
             val categories = useGetCoffeeCategories.execute()
-            call.respond(CategoryListDto(categories.data!!))
+            if(categories.data != null) call.respond(CategoryListDto(categories.data.map { it.toCategoryDto() }))
 
         }
 

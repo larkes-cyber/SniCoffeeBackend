@@ -7,6 +7,7 @@ sealed class CoffeeBranch(val route:String) {
     object UploadCoffeePhotoBranch: UserBranch("/upload_coffee_photo")
     object GetCoffeeByCategoryBranch: UserBranch("/get_coffee_by_category")
     object SearchForCoffeeBranch: UserBranch("/search_for_coffee")
+    object GetAllCoffee:UserBranch("/get_all_coffee")
 
 
 

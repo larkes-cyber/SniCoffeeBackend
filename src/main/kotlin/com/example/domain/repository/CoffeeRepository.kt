@@ -10,5 +10,6 @@ interface CoffeeRepository {
     suspend fun deleteCoffee(id:String)
     suspend fun getCoffeeByCategory(id:String):List<CoffeeEntity>
     suspend fun findCoffeeBySymbols(symbols:String):List<CoffeeEntity>
+    suspend fun getAllCoffee():List<CoffeeEntity>
 
 }

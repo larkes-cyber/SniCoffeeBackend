@@ -29,4 +29,8 @@ val coffeeDomainModule = module {
     factory<UseGetCoffeeByCategory> {
         UseGetCoffeeByCategory(get())
     }
+
+    factory<UseGetAllCoffee> {
+        UseGetAllCoffee(get())
+    }
 }

@@ -11,6 +11,7 @@ class UseEditCoffeeCategory(
 
     suspend fun execute(coffeeCategory: CoffeeCategory): Resource<String> {
         return try {
+            if(coffeeCategory.id != null)coffeeCategoryRepository.deleteCoffeeCategory(coffeeCategory.id)
             coffeeCategoryRepository.insertCoffeeCategory(coffeeCategory.toCoffeeKindEntity())
             Resource.Success("success")
         }catch (e:Exception){
