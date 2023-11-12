@@ -17,6 +17,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import java.io.File
 
 fun Routing.coffeeRouting(){
 
@@ -31,6 +32,15 @@ fun Routing.coffeeRouting(){
 
 
     route("/coffee"){
+
+        get(CoffeeBranch.GetCoffeeImage.route) {
+            val filename = call.parameters["file_name"]!!
+            val file = File("coffee_images/$filename.jpg")
+            if(file.exists()) {
+                call.respondFile(file)
+            }
+            else call.respond(HttpStatusCode.BadRequest)
+        }
 
         post(CoffeeBranch.AddCoffeeBranch.route) {
             val coffee = call.receive<CoffeeDto>()
@@ -78,26 +88,6 @@ fun Routing.coffeeRouting(){
                 }
             }
             call.respondText(Constants.SUCCESS_MESSAGE, status = HttpStatusCode.OK)
-        }
-
-        post(CoffeeBranch.GetCoffeeByCategoryBranch.route) {
-            val coffee = call.receive<SelectCategoryDto>()
-            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
-                call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
-                return@post
-            }
-            val coffeeList = useGetCoffeeByCategory.execute(categoryId = coffee.category).data
-            call.respond(CoffeeListDto(coffeeList!!.map { it.toCoffeeDto() }))
-        }
-
-        post(CoffeeBranch.SearchForCoffeeBranch.route) {
-            val coffee = call.receive<SearchForCoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
-                call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
-                return@post
-            }
-            val coffeeList = useFindCoffee.execute(symbols = coffee.symbols).data
-            call.respond(CoffeeListDto(coffeeList!!.map { it.toCoffeeDto() }))
         }
 
         post(CoffeeBranch.GetAllCoffee.route) {

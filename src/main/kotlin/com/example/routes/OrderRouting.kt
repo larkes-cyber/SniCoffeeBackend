@@ -67,6 +67,19 @@ fun Routing.orderRouting() {
             call.respond(OrderList(orders!!.map { it.toOrderDto() }))
         }
 
+        post(OrderBranch.GetUserOrders.route) {
+            val order = call.receive<SessionDto>()
+            if(useCheckCorrectSession.execute(order.session) == Constants.USER_DOESNT_EXIST){
+                call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
+                return@post
+            }
+            val orders = useGetOrders.execute().data?.filter {
+                it.userId == order.session
+            } ?: listOf()
+            call.respond(OrderList(orders.map { it.toOrderDto() }))
+
+        }
+
 
     }
 

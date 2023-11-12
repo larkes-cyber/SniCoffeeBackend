@@ -38,6 +38,16 @@ fun Routing.userRouting() {
     val useCheckUserExists by inject<UseCheckUserExists>()
 
     route("/user"){
+
+        get(UserBranch.GetUserImage.route) {
+            val filename = call.parameters["file_name"]!!
+            val file = File("user_images/$filename.jpg")
+            if(file.exists()) {
+                call.respondFile(file)
+            }
+            else call.respond(HttpStatusCode.BadRequest)
+        }
+
         post(UserBranch.RegisterBranch.route){
             val emailPattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
             val user = call.receive<UserDto>()

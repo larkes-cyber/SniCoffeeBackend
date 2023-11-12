@@ -8,5 +8,6 @@ sealed class UserBranch(val route:String) {
     object AddFavoriteCoffee: UserBranch("/add_favorite_coffee")
     object RemoveFavoriteCoffee: UserBranch("/remove_favorite_coffee")
     object GetUserInfo: UserBranch("/get_user_info")
+    object GetUserImage: UserBranch("/image")
 
 }
