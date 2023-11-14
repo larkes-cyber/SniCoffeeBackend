@@ -20,7 +20,7 @@ val dataSourceModule = module {
     single {
         KMongo.createClient()
             .coroutine
-            .getDatabase("notes_db_yt")
+            .getDatabase("coffee_db_yt")
     }
     single<CoffeeDiskDataSource> {
         CoffeeDiskDataSourceImpl(get())

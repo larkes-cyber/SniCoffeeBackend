@@ -66,7 +66,7 @@ fun Routing.userRouting() {
             }
 
             val res = useRegisterUser.execute(user.toUser())
-            call.respondText(res.data!!.id!!, status = HttpStatusCode.Accepted)
+            call.respond(res.data!!.toUserDto())
         }
         post(UserBranch.AuthBranch.route) {
             val login = call.receive<LoginDto>()

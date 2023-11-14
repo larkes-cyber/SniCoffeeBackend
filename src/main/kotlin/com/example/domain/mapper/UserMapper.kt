@@ -11,7 +11,6 @@ fun User.toUserEntity():UserEntity{
     return UserEntity(
         id = id,
         name = name,
-        photoSrc = photoSrc,
         number = number,
         login = login,
         password = password,
@@ -23,7 +22,6 @@ fun UserEntity.toUser():User{
     return User(
         id = id,
         name = name,
-        photoSrc = photoSrc,
         number = number,
         login = login,
         password = password,
@@ -35,7 +33,6 @@ fun UserDto.toUser():User{
     return User(
         id = id,
         name = name,
-        photoSrc = photoSrc,
         number = number,
         login = login,
         password = password,
@@ -47,7 +44,6 @@ fun User.toUserDto():UserDto{
     return UserDto(
         id = id,
         name = name,
-        photoSrc = photoSrc,
         number = number,
         login = login,
         password = password,

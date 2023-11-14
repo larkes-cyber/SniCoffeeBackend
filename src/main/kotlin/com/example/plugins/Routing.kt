@@ -15,5 +15,6 @@ fun Application.configureRouting() {
         coffeeCategoryRouting()
         orderRouting()
         userRouting()
+        injectRouting()
     }
 }

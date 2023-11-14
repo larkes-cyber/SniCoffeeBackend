@@ -8,7 +8,6 @@ import com.example.utils.Constants.ISSUER
 import com.example.utils.Constants.JWT_SECRET_KEY
 import com.example.utils.Constants.SUBJECT
 import io.ktor.util.*
-import sun.security.x509.CertificateIssuerExtension
 
 import javax.crypto.Mac
 import kotlin.math.log

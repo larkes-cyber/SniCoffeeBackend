@@ -4,7 +4,6 @@ import java.util.*
 
 data class CoffeeEntity(
     var id:String?,
-    val photoSrc:String?,
     val includeBeans:Boolean,
     val includeMilk:Boolean,
     val categoryId:String,

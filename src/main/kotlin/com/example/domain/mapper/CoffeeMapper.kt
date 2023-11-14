@@ -7,7 +7,6 @@ import com.example.routes.models.CoffeeDto
 fun Coffee.toCoffeeEntity():CoffeeEntity{
     return CoffeeEntity(
         id = id,
-        photoSrc = photoSrc,
         includeBeans = includeBeans,
         includeMilk = includeMilk,
         categoryId = categoryId,
@@ -23,7 +22,6 @@ fun Coffee.toCoffeeEntity():CoffeeEntity{
 fun CoffeeEntity.toCoffee():Coffee{
     return Coffee(
         id = id,
-        photoSrc = photoSrc,
         includeBeans = includeBeans,
         includeMilk = includeMilk,
         categoryId = categoryId,
@@ -39,7 +37,6 @@ fun CoffeeEntity.toCoffee():Coffee{
 fun CoffeeDto.toCoffee():Coffee{
     return Coffee(
         id = id,
-        photoSrc = photoSrc,
         includeBeans = includeBeans,
         includeMilk = includeMilk,
         categoryId = categoryId,
@@ -55,7 +52,6 @@ fun CoffeeDto.toCoffee():Coffee{
 fun Coffee.toCoffeeDto():CoffeeDto{
     return CoffeeDto(
         id = id,
-        photoSrc = photoSrc,
         includeBeans = includeBeans,
         includeMilk = includeMilk,
         categoryId = categoryId,
