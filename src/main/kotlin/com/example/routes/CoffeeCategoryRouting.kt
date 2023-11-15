@@ -58,8 +58,8 @@ fun Routing.coffeeCategoryRouting() {
             call.respondText(Constants.SUCCESS_MESSAGE, status = HttpStatusCode.OK)
         }
         post(CoffeeCategoryBranch.GetCoffeeCategories.route) {
-            val session = call.receive<SessionDto>()
-            if(useCheckCorrectSession.execute(session.session) == Constants.USER_DOESNT_EXIST){
+            val session = call.parameters["session"] ?: return@post call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
+            if(useCheckCorrectSession.execute(session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(Constants.INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
