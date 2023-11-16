@@ -89,17 +89,13 @@ fun Routing.userRouting() {
         }
 
         post(UserBranch.AddFavoriteCoffee.route) {
-            println("34234234234  sdfsdfsdfgdfgdfgdfgdfgdfgdfg")
             val coffee = call.receive<FavoriteCoffeeDto>()
-            println("34234234234  $coffee")
 
             if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
-            println("34234234234  sdfsdfsdfgdfgdfgdfgdfgdfgdfg")
             useAddFavoriteCoffee.execute(userId = coffee.session, coffeeId = coffee.coffeeId)
-            println("###############" + useGetUserInfo.execute(coffee.session).toString())
             call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
         }
 

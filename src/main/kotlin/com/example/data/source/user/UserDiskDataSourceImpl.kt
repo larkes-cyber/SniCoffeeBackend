@@ -69,6 +69,7 @@ class UserDiskDataSourceImpl(
         val filter = Filters.eq("id", userId)
         val user = userDb.findOne(filter)
         if(user != null){
+            userDb.deleteOne(filter)
             val favoriteCoffee = (if(user.favoriteCoffee.isNotEmpty()) user.favoriteCoffee.split(";") else listOf()).toMutableList()
             favoriteCoffee.remove(coffeeId)
             user.favoriteCoffee = favoriteCoffee.joinToString(";")
