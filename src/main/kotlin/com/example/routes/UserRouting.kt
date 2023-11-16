@@ -9,6 +9,7 @@ import com.example.routes.models.LoginDto
 import com.example.routes.models.SessionDto
 import com.example.routes.models.UserDto
 import com.example.routes.navigation.UserBranch
+import com.example.utils.Constants
 import com.example.utils.Constants.INCORRECT_DATA_MESSAGE
 import com.example.utils.Constants.INVALID_SESSION_MESSAGE
 import com.example.utils.Constants.SHORT_PASSWORD_MESSAGE
@@ -88,11 +89,15 @@ fun Routing.userRouting() {
         }
 
         post(UserBranch.AddFavoriteCoffee.route) {
+            println("34234234234  sdfsdfsdfgdfgdfgdfgdfgdfgdfg")
             val coffee = call.receive<FavoriteCoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            println("34234234234  $coffee")
+
+            if(useCheckCorrectSession.execute(coffee.session) == Constants.USER_DOESNT_EXIST){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }
+            println("34234234234  sdfsdfsdfgdfgdfgdfgdfgdfgdfg")
             useAddFavoriteCoffee.execute(userId = coffee.session, coffeeId = coffee.coffeeId)
             println("###############" + useGetUserInfo.execute(coffee.session).toString())
             call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
@@ -100,7 +105,7 @@ fun Routing.userRouting() {
 
         post(UserBranch.RemoveFavoriteCoffee.route) {
             val coffee = call.receive<FavoriteCoffeeDto>()
-            if(useCheckCorrectSession.execute(coffee.session)){
+            if(useCheckCorrectSession.execute(coffee.session)  == Constants.USER_DOESNT_EXIST ){
                 call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
                 return@post
             }

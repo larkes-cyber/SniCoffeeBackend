@@ -52,10 +52,15 @@ class UserDiskDataSourceImpl(
         val filter = Filters.eq("id", userId)
         val user = userDb.findOne(filter)
 
+
+        println("34234234234  $user")
+
         if(user != null){
+            userDb.deleteOne(filter)
             val favoriteCoffee = (if(user.favoriteCoffee.isNotEmpty()) user.favoriteCoffee.split(";") else listOf()).toMutableList()
             favoriteCoffee.add(coffeeId)
             user.favoriteCoffee = favoriteCoffee.joinToString(";")
+
             userDb.insertOne(user)
         }
     }

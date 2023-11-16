@@ -12,6 +12,7 @@ class UseAuthUser(
     suspend fun execute(login:String, password:String): Resource<User?> {
         return try {
             val user = userRepository.authUser(login = login, password = password)
+            println(user)
             Resource.Success(user?.toUser())
         }catch (e:Exception){
             Resource.Error(e.message!!)
