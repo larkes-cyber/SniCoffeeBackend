@@ -94,6 +94,7 @@ fun Routing.userRouting() {
                 return@post
             }
             useAddFavoriteCoffee.execute(userId = coffee.session, coffeeId = coffee.coffeeId)
+            println("###############" + useGetUserInfo.execute(coffee.session).toString())
             call.respondText(SUCCESS_MESSAGE, status = HttpStatusCode.OK)
         }
 
