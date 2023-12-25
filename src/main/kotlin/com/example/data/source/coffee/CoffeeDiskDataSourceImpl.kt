@@ -1,6 +1,9 @@
 package com.example.data.source.coffee
 
+import com.example.data.model.CoffeeCategoryEntity
 import com.example.data.model.CoffeeEntity
+import com.example.data.model.OrderEntity
+import com.example.data.model.UserEntity
 import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineDatabase

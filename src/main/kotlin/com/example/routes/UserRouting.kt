@@ -22,6 +22,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.delay
 import org.koin.ktor.ext.inject
 import java.io.File
 import kotlin.math.log
@@ -42,11 +43,16 @@ fun Routing.userRouting() {
 
         get(UserBranch.GetUserImage.route) {
             val filename = call.parameters["file_name"]!!
-            val file = File("user_images/$filename.jpg")
+            val file = File("user_images/$filename.jpeg")
             if(file.exists()) {
                 call.respondFile(file)
             }
             else call.respond(HttpStatusCode.BadRequest)
+        }
+
+        get(UserBranch.GetAddress.route){
+            delay(5000)
+            call.respondText("address")
         }
 
         post(UserBranch.RegisterBranch.route){
@@ -116,19 +122,18 @@ fun Routing.userRouting() {
                 return@post
             }
             val user = useGetUserInfo.execute(session.session)
+            println(user.data.toString() + "444234234234234")
             call.respond(user.data!!.toUserDto())
         }
         post(UserBranch.ChangeProfilePhotoBranch.route) {
             val multipartData = call.receiveMultipart()
-            val session = call.parameters["session"] ?: return@post call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.BadRequest)
+            println("$#$#$567`sdfgfdesdfovdopa[esrgdlb#K##Oks[kfds[kf5$")
             val login = call.parameters["login"] ?: return@post call.respondText(INCORRECT_DATA_MESSAGE, status = HttpStatusCode.BadRequest)
-            if(useCheckCorrectSession.execute(session) == USER_DOESNT_EXIST){
-                call.respondText(INVALID_SESSION_MESSAGE, status = HttpStatusCode.Unauthorized)
-                return@post
-            }
             multipartData.forEachPart {part ->
                 if(part is PartData.FileItem){
+                    println("$#$#$567`5$")
                     val fileBytes = part.streamProvider().readBytes()
+                    println(fileBytes.size.toString() + "#$#$#@#$#@#$#234#")
                     useChangeUserPhoto.execute(userId = login, photo = fileBytes)
                     part.dispose()
                 }
