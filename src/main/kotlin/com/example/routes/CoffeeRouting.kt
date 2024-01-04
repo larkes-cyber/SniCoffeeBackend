@@ -35,7 +35,7 @@ fun Routing.coffeeRouting(){
 
         get(CoffeeBranch.GetCoffeeImage.route) {
             val filename = call.parameters["file_name"]!!
-            val file = File("coffee_images/$filename.jpg")
+            val file = File("coffee_images/$filename.png")
             if(file.exists()) {
                 call.respondFile(file)
             }
